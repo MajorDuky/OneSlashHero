@@ -7,7 +7,6 @@ public class AimingController : MonoBehaviour
 {
     private OneSlashHero inputActions;
     private InputAction rotateAimDirection;
-    private InputAction slash;
     private Quaternion baseRotation;
 
     private void Awake()
@@ -20,19 +19,11 @@ public class AimingController : MonoBehaviour
         baseRotation = transform.rotation;
         rotateAimDirection = inputActions.Player.RotateAimDirection;
         rotateAimDirection.Enable();
-        slash = inputActions.Player.Slash;
-        slash.performed += OnSlash;
     }
 
     private void OnDisable()
     {
         rotateAimDirection.Disable();
-        slash.performed -= OnSlash;
-    }
-
-    private void OnSlash(InputAction.CallbackContext context)
-    {
-
     }
 
     private void Update()
@@ -41,9 +32,9 @@ public class AimingController : MonoBehaviour
         Quaternion targetRotation;
         if (rotateAimVector != Vector2.zero)
         {
+            ActionsManager.onSlashModeEnter.Invoke();
             float angle = (Mathf.Atan2(rotateAimVector.y, -rotateAimVector.x) * Mathf.Rad2Deg) - 90f;
             targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
-            
         }
         else
         {
