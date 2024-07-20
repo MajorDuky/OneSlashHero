@@ -32,7 +32,6 @@ public class SlashController : MonoBehaviour
     void OnSlash(InputAction.CallbackContext context)
     {
         RaycastHit hit;
-        Debug.DrawRay(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.forward) * 50);
         if (Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), transform.TransformDirection(Vector3.forward), out hit, 50))
         {
             if (hit.collider.gameObject.layer == 6)

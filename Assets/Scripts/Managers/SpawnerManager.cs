@@ -13,12 +13,18 @@ public class SpawnerManager : MonoBehaviour
     public int numberOfEnemiesOnFieldMediumDifficulty;
     public int numberOfEnemiesOnFieldHardDifficulty;
     private int numberOfEnemiesToHave;
+    private bool isSpawning;
     public static UnityEvent onEnemySlay = new UnityEvent();
 
     private void OnEnable()
     {
+        isSpawning = false;
+    }
+
+    private void StartSpawning()
+    {
         difficulty = GlobalParametersManager.instance.difficulty;
-        switch(difficulty)
+        switch (difficulty)
         {
             case GlobalParametersManager.Difficulty.Easy:
                 numberOfEnemiesToHave = numberOfEnemiesOnFieldEasyDifficulty;
@@ -30,7 +36,6 @@ public class SpawnerManager : MonoBehaviour
                 numberOfEnemiesToHave = numberOfEnemiesOnFieldHardDifficulty;
                 break;
         }
-        GlobalParametersManager.instance.isGameOn = true;
         StartCoroutine(SpawnEnemyCoroutine());
         onEnemySlay.AddListener(AnswerToEnemySlay);
     }
@@ -43,7 +48,11 @@ public class SpawnerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (GlobalParametersManager.instance.isGameOn && !isSpawning)
+        {
+            StartSpawning();
+            isSpawning = true;
+        }
     }
 
     private IEnumerator SpawnEnemyCoroutine()
