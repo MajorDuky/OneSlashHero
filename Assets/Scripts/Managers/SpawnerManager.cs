@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SpawnerManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class SpawnerManager : MonoBehaviour
     public int numberOfEnemiesOnFieldMediumDifficulty;
     public int numberOfEnemiesOnFieldHardDifficulty;
     private int numberOfEnemiesToHave;
+    public static UnityEvent onEnemySlay = new UnityEvent();
 
     private void OnEnable()
     {
@@ -30,6 +32,7 @@ public class SpawnerManager : MonoBehaviour
         }
         GlobalParametersManager.instance.isGameOn = true;
         StartCoroutine(SpawnEnemyCoroutine());
+        onEnemySlay.AddListener(AnswerToEnemySlay);
     }
     // Start is called before the first frame update
     void Start()
@@ -59,7 +62,12 @@ public class SpawnerManager : MonoBehaviour
 
                 enemyQtyOnField++;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2f);
         }
+    }
+
+    private void AnswerToEnemySlay()
+    {
+        enemyQtyOnField--;
     }
 }

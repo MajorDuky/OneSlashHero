@@ -8,6 +8,7 @@ public class AimingController : MonoBehaviour
     private OneSlashHero inputActions;
     private InputAction rotateAimDirection;
     private Quaternion baseRotation;
+    [SerializeField] private PlayerAnimationController animator;
 
     private void Awake()
     {
@@ -35,10 +36,12 @@ public class AimingController : MonoBehaviour
             ActionsManager.onSlashModeEnter.Invoke();
             float angle = (Mathf.Atan2(rotateAimVector.y, -rotateAimVector.x) * Mathf.Rad2Deg) - 90f;
             targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
+            animator.Crouch();
         }
         else
         {
             targetRotation = baseRotation;
+            animator.StopCrouching();
         }
         transform.rotation = targetRotation;
     }
