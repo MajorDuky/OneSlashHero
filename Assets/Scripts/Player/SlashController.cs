@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
 
@@ -9,6 +10,7 @@ public class SlashController : MonoBehaviour
     private OneSlashHero inputActions;
     private InputAction slash;
     private Color currentSlashColor;
+    public static UnityEvent onObstacleOrWrongEnemyHit = new UnityEvent();
     [SerializeField] private TrailRenderer slashTrail;
 
     private void Awake()
@@ -42,11 +44,15 @@ public class SlashController : MonoBehaviour
                     Vector3 currentForward = transform.forward;
                     transform.position = hit.collider.transform.position + currentForward;
                 }
+                else
+                {
+                    onObstacleOrWrongEnemyHit.Invoke();
+                }
                 
             }
             else if (hit.collider.gameObject.layer == 7)
             {
-                Debug.Log("AIE");
+                onObstacleOrWrongEnemyHit.Invoke();
             }
             else if (hit.collider.gameObject.layer == 8)
             {

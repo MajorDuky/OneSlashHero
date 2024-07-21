@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GlobalParametersManager : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class GlobalParametersManager : MonoBehaviour
     public Difficulty difficulty;
     public bool isGameOn;
     public Transform playerPos;
+    private int finalScore;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private GameOverUI gameOverUI;
 
     private void Awake()
     {
@@ -21,18 +25,41 @@ public class GlobalParametersManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        switch(MainMenuManager.Instance.chosenDifficulty)
+        {
+            case 0:
+                difficulty = Difficulty.Easy;
+                break;
+            case 1:
+                difficulty = Difficulty.Medium;
+                break;
+            case 2:
+                difficulty = Difficulty.Hard;
+                break;
+        }
         instance = this;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
+        TimerManager.timeOver.AddListener(GameOverSequence);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void GameOverSequence()
     {
-        
+        isGameOn = false;
+        gameOverUI.gameObject.SetActive(true);
+        finalScore = scoreManager.score;
+        gameOverUI.DisplayScoreText(finalScore);
+    }
+
+    public void ReplayBtn()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void BackToMenuBtn()
+    {
+        SceneManager.LoadScene(0);
     }
 }
